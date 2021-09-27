@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shrine/supplemental/asymmetric_view.dart';
 
 import 'model/products_repository.dart';
 import 'model/product.dart';
@@ -41,7 +42,9 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8.0),
-                  Text(products[index].name),
+                  Text(products[index].name,
+                    style: Theme.of(context).textTheme.button,
+                  ),
                    SizedBox(height: 8.0),
                    Text( products[index].price.toString() + ' L.E' ),
                 ],
@@ -79,11 +82,8 @@ class HomePage extends StatelessWidget {
               )),
         ],
       ),
-      body: GridView.count(
-        padding: EdgeInsets.all(8.0),
-        crossAxisCount: 2,
-        children: buildCards(context),
-      ),
+      body:AsymmetricView(products: ProductsRepository.loadProducts(Category.all)),
+
       resizeToAvoidBottomInset: false,
     );
   }
