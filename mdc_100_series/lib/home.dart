@@ -13,11 +13,42 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import 'model/products_repository.dart';
+import 'model/product.dart';
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  // TODO: Make a collection of cards (102)
+  List<Card> buildCards(BuildContext context) {
+    List<Product> products=ProductsRepository.loadProducts(Category.all);
+    if (products.isEmpty) {
+      return const <Card>[];
+    }
+    final NumberFormat formatter = NumberFormat.simpleCurrency(
+        locale: Localizations.localeOf(context).toString());
+    return List.generate(
+        products.length,
+        (index) => Card(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AspectRatio(
+                      aspectRatio: 25.0 / 15.0,
+                      child: Image.asset(products[index].assetName,package: products[index].assetPackage,fit: BoxFit.fill,),
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(products[index].name),
+                   SizedBox(height: 8.0),
+                   Text( products[index].price.toString() + ' L.E' ),
+                ],
+              ),
+            ));
+  }
+
   // TODO: Add a variable for Category (104)
   @override
   Widget build(BuildContext context) {
@@ -25,9 +56,9 @@ class HomePage extends StatelessWidget {
     // TODO: Pass Category variable to AsymmetricView (104)
     return Scaffold(
       appBar: AppBar(
-        title: Text('SHRINE'),
+        title: const Text('SHRINE'),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.menu,
             size: 30.0,
           ),
@@ -36,37 +67,22 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.search,
                 size: 30.0,
               )),
           IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.tune,
                 size: 30.0,
               )),
         ],
       ),
-      // TODO: Add a grid view (102)
       body: GridView.count(
         padding: EdgeInsets.all(8.0),
         crossAxisCount: 2,
-        children: [
-          Card(
-            child: Column(children:[
-              AspectRatio(
-                aspectRatio: 18.0 / 11.0,
-                child: Image.asset('assets/diamond.png'),
-              ),
-              Text('Title'),
-              const SizedBox(height: 8.0),
-              Text('Secondary Text'),
-              
-      ],),
-            
-          )
-        ],
+        children: buildCards(context),
       ),
       resizeToAvoidBottomInset: false,
     );
